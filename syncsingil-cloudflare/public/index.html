@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0f9f55"><title>SyncSingil Corp. | Microfinance & Digital Ledger</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+ <a class="brand" href="#" onclick="return false"><span class="logo">₱</span><span><b>SyncSingil Corp.</b><small>Secure Microfinance &amp; Digital Ledger</small></span></a>
+ <nav class="role-switch"><button id="borrowerTab" class="active" onclick="selectRole('borrower')">♟ Borrower Portal</button><button id="workerTab" onclick="selectRole('worker')">⬡ Admin / Worker</button></nav>
+</header>
+<section id="loginView" class="login-shell">
+ <div class="login-card">
+  <span class="eyebrow">SECURE ACCOUNT ACCESS</span><h1>Welcome back</h1><p>Sign in to continue to your SyncSingil workspace.</p>
+  <div class="role-pick"><button id="pickBorrower" class="selected" onclick="selectRole('borrower')">♟ Borrower</button><button id="pickWorker" onclick="selectRole('worker')">⬡ Admin / Worker</button></div>
+  <form id="loginForm">
+   <label>Email address<input id="email" type="email" placeholder="you@example.com" required autocomplete="username"></label>
+   <label>Password<input id="password" type="password" placeholder="Enter your password" required autocomplete="current-password"></label>
+   <button class="btn full" type="submit">Sign in securely →</button>
+  </form>
+  <div class="demo" id="demoText">Demo borrower: <b>borrower@syncsingil.test</b> / <b>borrower123</b></div>
+  <small class="muted">Prototype login only. See README before using real borrower information.</small>
+ </div>
+</section>
+
+<main id="borrowerView" class="hidden">
+ <section class="hero"><span class="eyebrow">CLIENT SELF-SERVICE PORTAL</span><h1>Welcome to Your Financial Hub</h1><p>Manage your active microloans, track upcoming repayment schedules, submit electronic proof of payment securely, and apply for credit extensions with real-time status updates.</p></section>
+ <section class="stats grid3">
+  <article class="card"><span class="stat-label">Active Loan Balance</span><strong class="stat-value" id="borrowerBalance">₱8,200.00</strong><span class="green">Due Date: March 25, 2026</span></article>
+  <article class="card"><span class="stat-label">Credit Limit Status</span><strong class="stat-value">₱25,000.00</strong><span class="blue">Pre-approved Tier 2</span></article>
+  <article class="card"><span class="stat-label">Repayment Health</span><strong class="stat-value green">100% On-Time</strong><span class="muted">Zero missed installments</span></article>
+ </section>
+ <section class="grid2">
+  <article class="card"><div class="section-head"><h2>▦ Active Repayment Schedule</h2><span class="tag">Loan #SL-2026-089</span></div><div id="scheduleList"></div></article>
+  <article class="card"><div class="section-head"><h2>▤ Submit Payment Receipt (GCash / Maya)</h2></div>
+   <form id="paymentForm"><div class="form2"><label>Reference Number<input id="reference" required placeholder="e.g. TRF-998234"></label><label>Amount Paid (₱)<input id="amount" type="number" min="1" required placeholder="4100"></label></div>
+    <label>Payment channel<select id="channel"><option>GCash</option><option>Maya</option><option>Bank Transfer</option></select></label>
+    <label>Receipt image (optional)<input id="receipt" type="file" accept="image/*"></label>
+    <button class="btn" type="submit">Submit payment for verification</button><p class="muted tiny">Your submission will appear as Pending until verified by an admin / worker.</p>
+   </form>
+  </article>
+  <article class="card"><div class="section-head"><h2>Apply for Credit Extension</h2></div><form id="extensionForm"><label>Reason for extension<textarea id="reason" required rows="3" placeholder="Briefly explain your request"></textarea></label><label>Requested additional days<input id="days" type="number" min="1" max="60" required placeholder="e.g. 7"></label><button class="btn secondary" type="submit">Submit extension request</button></form></article>
+  <article class="card"><div class="section-head"><h2>My Submissions</h2></div><div id="borrowerSubmissions" class="muted">No submissions yet.</div></article>
+ </section>
+</main>
+
+<main id="workerView" class="hidden">
+ <section class="admin-hero"><div><span class="eyebrow">MANAGEMENT &amp; OPERATIONS</span><h1>Admin &amp; Worker Dashboard</h1><p>Loan portfolio monitoring, digital ledger reconciliation, and core system operations.</p></div><button class="btn" onclick="openLoanModal()">＋ Register New Loan</button></section>
+ <section class="stats grid4">
+  <article class="card"><span class="stat-label">Active Portfolio</span><strong class="stat-value" id="portfolio">₱55,200</strong><span class="green">↗ Portfolio balance</span></article>
+  <article class="card"><span class="stat-label">Registered Borrowers</span><strong class="stat-value" id="borrowerCount">5</strong><span class="blue">Borrower accounts</span></article>
+  <article class="card"><span class="stat-label">Today's Collections</span><strong class="stat-value" id="collections">₱42,500</strong><span class="amber">Verified payments</span></article>
+  <article class="card"><span class="stat-label">System Architecture</span><strong class="stat-value">Cloud + Ledger</strong><span class="purple">Prototype environment</span></article>
+ </section>
+ <section class="card">
+  <div class="toolbar"><div><h2>Live Loan Portfolio Ledger</h2><p class="muted">Search borrowers and review outstanding loan accounts.</p></div><input class="search" id="search" placeholder="Search client name..." oninput="renderLoans()"></div>
+  <div class="table-wrap"><table><thead><tr><th>Client name</th><th>Loan amount</th><th>Interest (3%/mo)</th><th>Balance remaining</th><th>Status</th><th>Actions</th></tr></thead><tbody id="loanRows"></tbody></table></div>
+ </section>
+ <section class="grid2 worker-bottom">
+  <article class="card"><div class="section-head"><h2>Payment Verification Queue</h2><span class="tag" id="pendingCount">0 pending</span></div><div id="paymentQueue"></div></article>
+  <article class="card"><div class="section-head"><h2>Credit Extension Requests</h2></div><div id="extensionQueue"></div></article>
+ </section>
+</main>
+
+<div id="loanModal" class="modal hidden"><div class="modal-card"><div class="section-head"><h2>Register New Loan</h2><button class="close" onclick="closeLoanModal()">✕</button></div><form id="loanForm"><label>Borrower name<input id="loanName" required></label><div class="form2"><label>Loan amount (₱)<input id="loanAmount" type="number" min="1" required></label><label>Term (months)<input id="loanTerm" type="number" min="1" max="24" value="3" required></label></div><label>Contact number<input id="loanPhone" placeholder="09xx xxx xxxx"></label><button class="btn full">Create loan record</button></form></div></div>
+<div id="toast" class="toast hidden"></div>
+<script src="/app.js"></script>
+</body></html>
